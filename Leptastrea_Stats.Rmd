@@ -1,0 +1,106 @@
+---
+title: "Leptastrea Experiment"
+author: "Constance Sartor"
+date: "9/3/2019"
+output: html_document
+---
+##Larva Size
+```{r}
+Lep_Larv_Size$Date2 <- as.Date(Lep_Larv_Size$Date, "%m/%d/%Y") #transform date
+
+Lep_Larv_Size_Control <- subset(Lep_Larv_Size, Temperature == "Control")
+Lep_Larv_Size_Heat <- subset(Lep_Larv_Size, Temperature == "Heat")
+
+mean(Lep_Larv_Size_Heat$Size)
+mean(Lep_Larv_Size_Control$Size)
+
+boxplot(Size~Temperature, data = Lep_Larv_Size)
+
+t.test(Lep_Larv_Size_Control$Size, Lep_Larv_Size_Heat$Size)
+
+Lep_Larv_Size_Means <- Lep_Larv_Size %>% group_by(Date2, Temperature) %>% summarise(weekly.avg = mean(Size))
+
+ggplot(data = Lep_Larv_Size_Means, aes(x = Date2, y = weekly.avg, fill = Temperature)) + geom_bar(stat = "identity", color = "black", position = position_dodge()) + theme_minimal() + xlab("Week") + ylab("Average Size (mm)") + ggtitle("Average Larval Size by Treatment and Week")
+
+Lep_Larv_Size2 <- subset(Lep_Larv_Size, Measure < "4")
+
+Lep_Larv_Size_Control2 <- subset(Lep_Larv_Size2, Temperature == "Control")
+Lep_Larv_Size_Heat2 <- subset(Lep_Larv_Size2, Temperature == "Heat")
+
+mean(Lep_Larv_Size_Heat2$Size)
+mean(Lep_Larv_Size_Control2$Size)
+
+#boxplot(Size~Temperature, data = Lep_Larv_Size)
+
+t.test(Lep_Larv_Size_Control2$Size, Lep_Larv_Size_Heat2$Size)
+
+shapiro.test(Lep_Larv_Size$Size)
+
+#M2 <- lm(Temperature~Size, data = Lep_Larv_Size, na.rm = TRUE)
+#summary(M2)
+#plot(M2)
+#hist(resid(M2))
+#dataxxx$predicted <- predict(M2, na.rm = TRUE)
+#dataxxx$predicted.backtransform <- 10^(dataxxx$predicted)
+
+hist(Lep_Larv_Size$Size)
+
+hist(Lep_Larv_Size$Measure)
+
+```
+
+##Larvae Counts
+```{r}
+Lep_Larv_Count$Date2 <- as.Date(Lep_Larv_Count$Date, "%m/%d/%Y") #transform date
+
+Lep_Larv_Count_Control <- subset(Lep_Larv_Count, Treatment == "Control")
+Lep_Larv_Count_Heat <- subset(Lep_Larv_Count, Treatment == "Heat")
+
+mean(Lep_Larv_Count_Heat$Count, na.rm = TRUE)
+mean(Lep_Larv_Count_Control$Count, na.rm = TRUE)
+
+t.test(Lep_Larv_Count_Control$Count,Lep_Larv_Count_Heat$Count)
+
+boxplot(Count~Treatment, data = Lep_Larv_Count)
+
+Lep_Larv_Count_Means <- Lep_Larv_Count %>% group_by(Date2, Treatment) %>% summarise(weekly.avg = mean(Count))
+
+ggplot(data = Lep_Larv_Count_Means, aes(x = Date2, y = weekly.avg, fill = Treatment)) + geom_bar(stat = "identity", color = "black", position = position_dodge()) + theme_minimal() + xlab("Week") + ylab("Average Larval Count") + ggtitle("Average Larval Count by Treatment and Week")
+
+```
+
+##Larvae Settlement
+```{r}
+Lep_Settled$Date2 <- as.Date(Lep_Settled$Date, "%m/%d/%Y") #transform date
+
+Lep_Larv_Settled_Control <- subset(Lep_Settled, Treatment == "Control")
+Lep_Larv_Settled_Heat <- subset(Lep_Settled, Treatment == "Heated")
+
+mean(Lep_Larv_Settled_Heat$Settled, na.rm = TRUE)
+mean(Lep_Larv_Settled_Control$Settled, na.rm = TRUE)
+
+t.test(Lep_Larv_Settled_Control$Settled, Lep_Larv_Settled_Heat$Settled)
+
+boxplot(Settled~Treatment, data = Lep_Settled)
+
+ggplot(data = Lep_Settled, aes(x = Date2, y = Settled, fill = Treatment)) + geom_bar(stat = "identity", color = "black", position = position_dodge()) + theme_minimal() + xlab("Week") + ylab("Average Larval Settlement") + ggtitle("Average Larval Settlement by Treatment and Week")
+```
+
+
+##Larvae Death
+```{r}
+Lep_Settled$Date2 <- as.Date(Lep_Settled$Date, "%m/%d/%Y") #transform date
+
+Lep_Larv_Settled_Control <- subset(Lep_Settled, Treatment == "Control")
+Lep_Larv_Settled_Heat <- subset(Lep_Settled, Treatment == "Heated")
+
+mean(Lep_Larv_Settled_Heat$Dead, na.rm = TRUE)
+mean(Lep_Larv_Settled_Control$Dead, na.rm = TRUE)
+
+t.test(Lep_Larv_Settled_Control$Settled, Lep_Larv_Settled_Heat$Dead)
+
+boxplot(Dead~Treatment, data = Lep_Settled)
+
+ggplot(data = Lep_Settled, aes(x = Date2, y = Dead, fill = Treatment)) + geom_bar(stat = "identity", color = "black", position = position_dodge()) + theme_minimal() + xlab("Week") + ylab("Average Larval Settlement Death") + ggtitle("Average Larval Settlement Death by Treatment and Week")
+```
+
